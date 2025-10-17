@@ -147,8 +147,10 @@ function renderClassList(query) {
 
 // -------------------- FORMAT HEX --------------------
 function formatHex(value) {
-    if (typeof value === "number" && Number.isFinite(value)) return "0x" + value.toString(16).padStart(1, "0").toUpperCase();
-    if (typeof value === "string" && /^-?\d+$/.test(value)) return "0x" + parseInt(value, 10).toString(16).toUpperCase();
+    if (typeof value === "number" && Number.isFinite(value))
+        return "0x" + value.toString(16).padStart(1, "0").toUpperCase();
+    if (typeof value === "string" && /^-?\d+$/.test(value))
+        return "0x" + parseInt(value, 10).toString(16).toUpperCase();
     return String(value);
 }
 
@@ -257,4 +259,18 @@ function selectClass(className, element, term) {
 }
 
 // -------------------- INIT --------------------
-window.addEventListener("DOMContentLoaded", fetchData);
+window.addEventListener("DOMContentLoaded", () => {
+    fetchData();
+
+    // -------------------- SEARCH BAR HANDLER --------------------
+    const searchBox = document.getElementById("searchBox");
+    if (searchBox) {
+        let searchTimeout;
+        searchBox.addEventListener("input", (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                renderClassList(e.target.value);
+            }, 150); // debounce for smoother typing
+        });
+    }
+});
